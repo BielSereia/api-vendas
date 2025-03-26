@@ -1,0 +1,32 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@18.18.0
+
+executors:
+  my-executor:
+    docker:
+      - image: cimg/ruby:3.0.3-browsers
+
+jobs:
+  install-node-example:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - node/install:
+          install-yarn: true
+          node-version: '16.13'
+      - run: node --version
+  my-job:
+    executor: my-executor
+    steps:
+      - run: echo "Hello executor!"
+
+workflows:
+  test_my_app:
+    jobs:
+      - install-node-example
+  say_hello:
+    jobs:
+      - my-job
